@@ -1,9 +1,10 @@
+import { StatusBar } from "expo-status-bar";
 import { DefaultTheme, NavigationContainer } from "@react-navigation/native";
+import { useDeviceContext } from "twrnc";
+import tw from "twrnc";
 import { useFonts } from "expo-font";
-import { createStackNavigator } from "@react-navigation/stack";
-import SplashScreen from "./app/screens/splashscreen";
+import RootStack from "./app/navigators/RootStack";
 
-const Stack = createStackNavigator();
 const theme = {
   ...DefaultTheme,
   colors: {
@@ -12,6 +13,8 @@ const theme = {
   },
 };
 export default function App() {
+  useDeviceContext(tw);
+
   const [loaded] = useFonts({
     InterBold: require("./app/assets/fonts/Inter-Bold.ttf"),
     InterSemiBold: require("./app/assets/fonts/Inter-SemiBold.ttf"),
@@ -22,13 +25,9 @@ export default function App() {
 
   if (!loaded) return null;
   return (
-    <NavigationContainer theme={theme}>
-      <Stack.Navigator
-        screnOptions={{ headerShown: false }}
-        initialRouteName="splashscreen"
-      >
-        <Stack.Screen name="splashscreen" component={SplashScreen} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <>
+      <StatusBar style="light" />
+      <RootStack />
+    </>
   );
 }
