@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { DefaultTheme, NavigationContainer } from "@react-navigation/native";
+import { DefaultTheme } from "@react-navigation/native";
 import { useDeviceContext } from "twrnc";
 import tw from "twrnc";
 import { useFonts } from "expo-font";
@@ -26,7 +26,7 @@ export default function App() {
   if (!loaded) return null;
   return (
     <>
-      <StatusBar style="light" />
+      <StatusBar backgroundColor="#F4F4F4" />
       <RootStack />
     </>
   );
