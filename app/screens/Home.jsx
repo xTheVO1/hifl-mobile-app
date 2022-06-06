@@ -131,13 +131,17 @@ const Home = ({ navigation }) => {
   const handleSubmit = () => {
     navigation.navigate("newFan");
   };
-
+  const handleFan = () => {
+    navigation.navigate("fanDetail");
+  };
   const renderItem = ({ item }) => (
-    <Item
-      firstName={item.firstName}
-      lastName={item.lastName}
-      phoneNumber={item.phoneNumber}
-    />
+    <Pressable onPress={handleFan}>
+      <Item
+        firstName={item.firstName}
+        lastName={item.lastName}
+        phoneNumber={item.phoneNumber}
+      />
+    </Pressable>
   );
   return (
     <SafeAreaView style={tw`bg-secondary h-full relative`}>
@@ -152,10 +156,17 @@ const Home = ({ navigation }) => {
           </View>
         </View>
 
-        <View style={tw`h-[100%] bg-[#fff] rounded-t-[25px] py-15 `}>
-          <View style={tw`px-6`}>
-            <Text>Search Area</Text>
-          </View>
+        <View
+          style={tw`h-[100%]  bg-[#fff] rounded-t-[25px] py-10 items-center`}
+        >
+          <TextInput
+            style={tw`bg-[#FAFAFA]  py-3 text-sm border w-[90%] border-[#F4C316] focus:border-primary rounded-full px-4 mb-4 focus:outline-none`}
+            placeholder="Find a fan!"
+            name="search"
+            keyboardType="email-address"
+            autoComplete="off"
+          />
+
           <View style={tw`my-8 w-full`}>
             <FlatList
               data={DATA}
