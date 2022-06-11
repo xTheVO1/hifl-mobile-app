@@ -10,16 +10,31 @@ import {
   TouchableOpacity,
   StatusBar,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import tw from "../lib/tailwind";
+import { BASE_URL } from "@env";
+import { alertModal } from "../helpers/utils";
+import { useSelector, useDispatch } from "react-redux";
+import { login } from "../redux/features/auth.slice";
 
 const Login = ({ navigation }) => {
   const initialState = { email: "", password: "" };
-  const [user, setUser] = useState(initialState);
-  const [loading, setLoading] = useState(false);
+  const [userData, setUserData] = useState(initialState);
+  const { loading, user } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
 
   const handleSubmit = () => {
-    navigation.navigate("home");
+    if (userData.email == "" || userData.password == "") {
+      return alertModal("Oops!", "Please all fields are required");
+    }
+    if (userData.email && userData.password) {
+      const payload = { Email: userData.email.trim(), Password: userData.password.trim() };
+      // console.log(payload);
+      dispatch(login({ payload, AsyncStorage }));
+    }
   };
+
+  //console.log(user, "user object saved in storage");
 
   return (
     <SafeAreaView style={tw`bg-secondary `}>
@@ -39,15 +54,15 @@ const Login = ({ navigation }) => {
                 style={tw`py-3 text-sm border w-full border-[#E5E5E5] focus:border-primary rounded px-4 mb-6 focus:outline-none`}
                 placeholder="Email Address"
                 name="email"
-                onChangeText={(value) => setUser({ ...user, email: value })}
-                value={user.email}
+                onChangeText={(value) => setUserData({ ...userData, email: value })}
+                value={userData.email}
               />
               <TextInput
                 style={tw`py-3 text-sm border w-full border-[#E5E5E5] focus:border-primary rounded px-4 mb-10 focus:outline-none`}
                 placeholder="Password"
                 name="password"
-                onChangeText={(value) => setUser({ ...user, password: value })}
-                value={user.password}
+                onChangeText={(value) => setUserData({ ...userData, password: value })}
+                value={userData.password}
                 secureTextEntry
               />
               <TouchableOpacity

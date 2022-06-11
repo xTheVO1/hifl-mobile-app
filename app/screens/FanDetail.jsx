@@ -13,6 +13,8 @@ import {
   SectionList,
 } from "react-native";
 import tw from "../lib/tailwind";
+import { useDispatch } from "react-redux";
+import { logout } from "../redux/features/auth.slice";
 
 const Gender = [
   {
@@ -28,6 +30,8 @@ const Item = ({ title }) => (
 );
 
 const FanDetail = ({ navigation }) => {
+  const dispatch = useDispatch();
+
   const handleSubmit = () => {
     console.log("Clicked");
   };
@@ -35,7 +39,7 @@ const FanDetail = ({ navigation }) => {
     navigation.navigate("home");
   };
   const handleLogout = () => {
-    navigation.navigate("login");
+    dispatch(logout());
   };
   const initialState = {
     firstName: "",
@@ -52,18 +56,12 @@ const FanDetail = ({ navigation }) => {
         <View style={tw`h-[200px] flex flex-col justify-end pb-5`}>
           <View style={tw`flex flex-row justify-between items-center px-6`}>
             <Pressable onPress={handleHome}>
-              <Image
-                source={require("../assets/icons/home.png")}
-                style={tw``}
-              />
+              <Image source={require("../assets/icons/home.png")} style={tw``} />
             </Pressable>
             <Text style={tw`text-[#fff] font-bold text-2xl`}> Fan Profile</Text>
 
             <Pressable onPress={handleLogout}>
-              <Image
-                source={require("../assets/hifl_icon.png")}
-                style={tw`w-[50px]`}
-              />
+              <Image source={require("../assets/hifl_icon.png")} style={tw`w-[50px]`} />
             </Pressable>
           </View>
         </View>
@@ -105,14 +103,9 @@ const FanDetail = ({ navigation }) => {
               keyboardType="email-address"
               autoComplete="off"
             />
-            <View
-              style={tw`flex flex-row border-b border-b-[#F4C316] mt-5 mb-5 justify-between content-center`}
-            >
+            <View style={tw`flex flex-row border-b border-b-[#F4C316] mt-5 mb-5 justify-between content-center`}>
               <Text style={tw`text-2xl font-bold`}>Tickets</Text>
-              <Image
-                source={require("../assets/icons/added.png")}
-                style={tw`w-[48px] h-[48px]`}
-              />
+              <Image source={require("../assets/icons/added.png")} style={tw`w-[48px] h-[48px]`} />
             </View>
 
             <TextInput
@@ -135,9 +128,7 @@ const FanDetail = ({ navigation }) => {
               {loading ? (
                 <ActivityIndicator size="small" color="#fff" />
               ) : (
-                <Text style={tw`text-[#fff] text-sm font-bold capitalize`}>
-                  Submit
-                </Text>
+                <Text style={tw`text-[#fff] text-sm font-bold capitalize`}>Submit</Text>
               )}
             </TouchableOpacity>
           </View>

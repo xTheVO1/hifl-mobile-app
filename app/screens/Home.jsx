@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import {
-  ScrollView,
   View,
   Text,
   TextInput,
@@ -8,7 +7,6 @@ import {
   SafeAreaView,
   ActivityIndicator,
   TouchableOpacity,
-  StatusBar,
   Pressable,
   FlatList,
 } from "react-native";
@@ -104,10 +102,7 @@ const Item = ({ firstName, lastName }) => (
   <View style={tw`w-full p-5 my-1 flex flex-col content-center bg-[#FAFAFA]`}>
     <View style={tw`flex flex-row justify-between`}>
       <View style={tw`flex flex-row `}>
-        <Image
-          source={require("../assets/icons/girl.png")}
-          style={tw`w-[48px] h-[48px] mr-5`}
-        />
+        <Image source={require("../assets/icons/girl.png")} style={tw`w-[48px] h-[48px] mr-5`} />
         <View style={tw`flex flex-col content-center`}>
           <Text style={tw`text-[#000229] text-lg font-light	`}>
             {firstName} {lastName}
@@ -136,11 +131,7 @@ const Home = ({ navigation }) => {
   };
   const renderItem = ({ item }) => (
     <Pressable onPress={handleFan}>
-      <Item
-        firstName={item.firstName}
-        lastName={item.lastName}
-        phoneNumber={item.phoneNumber}
-      />
+      <Item firstName={item.firstName} lastName={item.lastName} phoneNumber={item.phoneNumber} />
     </Pressable>
   );
 
@@ -149,10 +140,7 @@ const Home = ({ navigation }) => {
       <View style={tw`h-[200px] flex flex-col justify-end pb-5`}>
         <View style={tw`flex flex-row justify-between items-center px-6`}>
           <Text style={tw`text-[#fff] font-bold text-2xl`}>Hi Feji,</Text>
-          <Image
-            source={require("../assets/hifl_icon.png")}
-            style={tw`w-[50px]`}
-          />
+          <Image source={require("../assets/hifl_icon.png")} style={tw`w-[50px]`} />
         </View>
       </View>
 
@@ -166,22 +154,11 @@ const Home = ({ navigation }) => {
         />
 
         <View style={tw`my-8 w-full`}>
-          <FlatList
-            data={DATA}
-            renderItem={renderItem}
-            keyExtractor={(item) => item.id}
-          />
+          <FlatList data={DATA} renderItem={renderItem} keyExtractor={(item) => item.id} />
         </View>
       </View>
-      <TouchableOpacity
-        activeOpacity={0.7}
-        onPress={handleSubmit}
-        style={tw`absolute bottom-8 right-6`}
-      >
-        <Image
-          source={require("../assets/icons/add.png")}
-          style={tw`w-[60px] h-[60px]`}
-        />
+      <TouchableOpacity activeOpacity={0.7} onPress={handleSubmit} style={tw`absolute bottom-8 right-6`}>
+        <Image source={require("../assets/icons/add.png")} style={tw`w-[60px] h-[60px]`} />
       </TouchableOpacity>
     </SafeAreaView>
   );

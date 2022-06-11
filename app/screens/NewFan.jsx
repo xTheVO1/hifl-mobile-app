@@ -13,6 +13,8 @@ import {
   SectionList,
 } from "react-native";
 import tw from "../lib/tailwind";
+import { useDispatch } from "react-redux";
+import { logout } from "../redux/features/auth.slice";
 
 const Gender = [
   {
@@ -28,6 +30,7 @@ const Item = ({ title }) => (
 );
 
 const NewFan = ({ navigation }) => {
+  const dispatch = useDispatch();
   const handleSubmit = () => {
     console.log("Clicked");
   };
@@ -35,7 +38,7 @@ const NewFan = ({ navigation }) => {
     navigation.navigate("home");
   };
   const handleLogout = () => {
-    navigation.navigate("login");
+    dispatch(logout());
   };
   const initialState = {
     firstName: "",
