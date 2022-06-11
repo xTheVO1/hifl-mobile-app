@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   ScrollView,
   View,
@@ -8,13 +8,14 @@ import {
   SafeAreaView,
   ActivityIndicator,
   TouchableOpacity,
-  StatusBar,
   Pressable,
-  SectionList,
 } from "react-native";
 import tw from "../lib/tailwind";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../redux/features/auth.slice";
+import { registerFan } from "../redux/features/fan.slice";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { alertModal } from "../helpers/utils";
 
 const Gender = [
   {
@@ -30,16 +31,9 @@ const Item = ({ title }) => (
 );
 
 const NewFan = ({ navigation }) => {
-  const dispatch = useDispatch();
-  const handleSubmit = () => {
-    console.log("Clicked");
-  };
-  const handleHome = () => {
-    navigation.navigate("home");
-  };
-  const handleLogout = () => {
-    dispatch(logout());
-  };
+  const [currentUser, setCurrentUser] = useState(null);
+
+  //console.log(currentUser, "volunteer is saved bro!!");
   const initialState = {
     firstName: "",
     lastName: "",
@@ -48,7 +42,30 @@ const NewFan = ({ navigation }) => {
     createdBy: "",
   };
   const [fan, setFan] = useState(initialState);
-  const [loading, setLoading] = useState(false);
+  const { loading } = useSelector((state) => state.fan);
+  const dispatch = useDispatch();
+
+  const handleHome = () => {
+    navigation.navigate("home");
+  };
+  const handleLogout = () => {
+    dispatch(logout());
+  };
+  const handleSubmit = () => {
+    const tickets = [{ ticketNo: fan.ticket, ticketDate: new Date() }];
+    const payload = { ...fan, createdBy: currentUser._id, tickets };
+    // console.log(payload, "payload");
+    dispatch(registerFan({ payload, AsyncStorage, alertModal }));
+  };
+  useEffect(() => {
+    AsyncStorage.getItem("user").then((res) => {
+      if (res !== null) {
+        console.log(JSON.parse(res).data.accessToken);
+        setCurrentUser(JSON.parse(res).data.User);
+      }
+    });
+  }, []);
+
   return (
     <SafeAreaView style={tw`bg-secondary h-full relative`}>
       <ScrollView style={tw`flex flex-col bg-secondary`}>

@@ -5,11 +5,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 export const login = createAsyncThunk("/auth/login", async ({ payload, AsyncStorage }, { rejectWithValue }) => {
   try {
     const response = await api.signIn(payload);
-    // toast.success("Login Successfull", {
-    //   onClose: () =>
-    //     router.query && router.query.redirect ? router.push(router.query.redirect) : router.push("/account"),
-    //   autoClose: 2000,
-    // });
     console.log(response.data, "user just logged in");
     return response.data;
   } catch (err) {
@@ -18,37 +13,13 @@ export const login = createAsyncThunk("/auth/login", async ({ payload, AsyncStor
   }
 });
 
-// export const register = createAsyncThunk("/auth/register", async ({ payload, toast, router }, { rejectWithValue }) => {
-//   try {
-//     const response = await api.register(payload);
-//     toast.success("Registration Successfull, Please Log In", { onClose: () => router.push("/login") });
-//     return response.data;
-//   } catch (err) {
-//     toast.error(err.response.data.message);
-//     return rejectWithValue(err.response.data);
-//   }
-// });
-
-// export const update = createAsyncThunk("/auth/user/update-profile", async ({ payload, toast }, { rejectWithValue }) => {
-//   try {
-//     const response = await api.update(payload);
-//     toast.success("Profile Updated Successfully");
-//     return response.data;
-//   } catch (err) {
-//     toast.error(err.response.data.message);
-//     return rejectWithValue(err.response.data);
-//   }
-// });
-
 //RETURN USER OBJECT IF LOGGED IN
-export const isLoggedIn = () => {
-  if (typeof window === "undefined") {
-    return false;
-  }
-  if (localStorage.getItem("user")) {
-    return JSON.parse(localStorage.getItem("user"));
-  }
-  return false;
+export const userDetails = () => {
+  AsyncStorage.getItem("user").then((res) => {
+    if (res !== null) {
+      return res;
+    }
+  });
 };
 
 const authSlice = createSlice({
@@ -75,10 +46,6 @@ const authSlice = createSlice({
     },
     [login.fulfilled]: (state, action) => {
       state.loading = false;
-      //localStorage.setItem("user", JSON.stringify({ ...action.payload }));
-      // AsyncStorage.setItem("user", JSON.stringify({ ...action.payload })).then(() => {
-      //   state.user = action.payload;
-      // });
       AsyncStorage.setItem("user", JSON.stringify({ ...action.payload }));
       state.user = action.payload;
     },
@@ -86,32 +53,6 @@ const authSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
     },
-
-    // [register.pending]: (state) => {
-    //   state.loading = true;
-    // },
-    // [register.fulfilled]: (state, action) => {
-    //   state.loading = false;
-    //   // localStorage.setItem("user", JSON.stringify({ ...action.payload }));
-    //   state.user = action.payload;
-    // },
-    // [register.rejected]: (state, action) => {
-    //   state.loading = false;
-    //   state.error = action.payload;
-    // },
-
-    // [update.pending]: (state) => {
-    //   state.loading = true;
-    // },
-    // [update.fulfilled]: (state, action) => {
-    //   state.loading = false;
-    //   localStorage.setItem("user", JSON.stringify({ ...action.payload }));
-    //   state.user = action.payload;
-    // },
-    // [update.rejected]: (state, action) => {
-    //   state.loading = false;
-    //   state.error = action.payload;
-    // },
   },
 });
 
