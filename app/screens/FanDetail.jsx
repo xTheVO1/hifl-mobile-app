@@ -27,7 +27,7 @@ const Item = ({ title }) => (
   </View>
 );
 
-const NewFan = ({ navigation }) => {
+const FanDetail = ({ navigation }) => {
   const handleSubmit = () => {
     console.log("Clicked");
   };
@@ -52,12 +52,18 @@ const NewFan = ({ navigation }) => {
         <View style={tw`h-[200px] flex flex-col justify-end pb-5`}>
           <View style={tw`flex flex-row justify-between items-center px-6`}>
             <Pressable onPress={handleHome}>
-              <Image source={require("../assets/icons/home.png")} style={tw``} />
+              <Image
+                source={require("../assets/icons/home.png")}
+                style={tw``}
+              />
             </Pressable>
-            <Text style={tw`text-[#fff] font-bold text-2xl`}>New Fan</Text>
+            <Text style={tw`text-[#fff] font-bold text-2xl`}> Fan Profile</Text>
 
             <Pressable onPress={handleLogout}>
-              <Image source={require("../assets/hifl_icon.png")} style={tw`w-[50px]`} />
+              <Image
+                source={require("../assets/hifl_icon.png")}
+                style={tw`w-[50px]`}
+              />
             </Pressable>
           </View>
         </View>
@@ -91,7 +97,7 @@ const NewFan = ({ navigation }) => {
               autoComplete="off"
             />
             <TextInput
-              style={tw`py-3 text-sm border w-full border-[#E5E5E5] focus:border-primary rounded px-4 mb-6 focus:outline-none`}
+              style={tw`py-3 text-sm border w-full border-[#E5E5E5] focus:border-primary rounded px-4 focus:outline-none`}
               placeholder="Email Address"
               name="email"
               onChangeText={(value) => setFan({ ...fan, email: value })}
@@ -99,6 +105,15 @@ const NewFan = ({ navigation }) => {
               keyboardType="email-address"
               autoComplete="off"
             />
+            <View
+              style={tw`flex flex-row divide-y divide-[#F4C316] mb-5 justify-between content-center`}
+            >
+              <Text style={tw`text-2xl font-bold`}>Tickets</Text>
+              <Image
+                source={require("../assets/icons/added.png")}
+                style={tw`w-[48px] h-[48px]`}
+              />
+            </View>
 
             <TextInput
               style={tw`py-3 text-sm border w-full border-[#E5E5E5] focus:border-primary rounded px-4 mb-10 focus:outline-none`}
@@ -110,6 +125,7 @@ const NewFan = ({ navigation }) => {
               keyboardType="number-pad"
               autoComplete="off"
             />
+
             <TouchableOpacity
               style={tw`py-4 w-full bg-primary flex flex-row justify-center rounded-md`}
               activeOpacity={0.7}
@@ -119,7 +135,9 @@ const NewFan = ({ navigation }) => {
               {loading ? (
                 <ActivityIndicator size="small" color="#fff" />
               ) : (
-                <Text style={tw`text-[#fff] text-sm font-bold capitalize`}>Submit</Text>
+                <Text style={tw`text-[#fff] text-sm font-bold capitalize`}>
+                  Submit
+                </Text>
               )}
             </TouchableOpacity>
           </View>
@@ -129,4 +147,4 @@ const NewFan = ({ navigation }) => {
   );
 };
 
-export default NewFan;
+export default FanDetail;
