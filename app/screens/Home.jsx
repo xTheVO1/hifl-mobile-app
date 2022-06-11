@@ -143,49 +143,46 @@ const Home = ({ navigation }) => {
       />
     </Pressable>
   );
+
   return (
     <SafeAreaView style={tw`bg-secondary h-full relative`}>
-      <ScrollView style={tw`flex flex-col bg-secondary`}>
-        <View style={tw`h-[200px] flex flex-col justify-end pb-5`}>
-          <View style={tw`flex flex-row justify-between items-center px-6`}>
-            <Text style={tw`text-[#fff] font-bold text-2xl`}>Hi Feji,</Text>
-            <Image
-              source={require("../assets/hifl_icon.png")}
-              style={tw`w-[50px]`}
-            />
-          </View>
-        </View>
-
-        <View
-          style={tw`h-[100%]  bg-[#fff] rounded-t-[25px] py-10 items-center`}
-        >
-          <TextInput
-            style={tw`bg-[#FAFAFA]  py-3 text-sm border w-[90%] border-[#F4C316] focus:border-primary rounded-full px-4 mb-4 focus:outline-none`}
-            placeholder="Find a fan!"
-            name="search"
-            keyboardType="email-address"
-            autoComplete="off"
-          />
-
-          <View style={tw`my-8 w-full`}>
-            <FlatList
-              data={DATA}
-              renderItem={renderItem}
-              keyExtractor={(item) => item.id}
-            />
-          </View>
-        </View>
-        <TouchableOpacity
-          activeOpacity={0.7}
-          onPress={handleSubmit}
-          style={tw`absolute bottom-8 right-6`}
-        >
+      <View style={tw`h-[200px] flex flex-col justify-end pb-5`}>
+        <View style={tw`flex flex-row justify-between items-center px-6`}>
+          <Text style={tw`text-[#fff] font-bold text-2xl`}>Hi Feji,</Text>
           <Image
-            source={require("../assets/icons/add.png")}
-            style={tw`w-[60px] h-[60px]`}
+            source={require("../assets/hifl_icon.png")}
+            style={tw`w-[50px]`}
           />
-        </TouchableOpacity>
-      </ScrollView>
+        </View>
+      </View>
+
+      <View style={tw`h-[100%]  bg-[#fff] rounded-t-[25px] py-10 items-center`}>
+        <TextInput
+          style={tw`bg-[#FAFAFA]  py-3 text-sm border w-[90%] border-[#F4C316] focus:border-primary rounded-full px-4 mb-4 focus:outline-none`}
+          placeholder="Find a fan!"
+          name="search"
+          keyboardType="email-address"
+          autoComplete="off"
+        />
+
+        <View style={tw`my-8 w-full`}>
+          <FlatList
+            data={DATA}
+            renderItem={renderItem}
+            keyExtractor={(item) => item.id}
+          />
+        </View>
+      </View>
+      <TouchableOpacity
+        activeOpacity={0.7}
+        onPress={handleSubmit}
+        style={tw`absolute bottom-8 right-6`}
+      >
+        <Image
+          source={require("../assets/icons/add.png")}
+          style={tw`w-[60px] h-[60px]`}
+        />
+      </TouchableOpacity>
     </SafeAreaView>
   );
 };
