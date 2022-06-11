@@ -106,7 +106,7 @@ const FanDetail = ({ navigation }) => {
               autoComplete="off"
             />
             <View
-              style={tw`flex flex-row divide-y divide-[#F4C316] mb-5 justify-between content-center`}
+              style={tw`flex flex-row border-b border-b-[#F4C316] mt-5 mb-5 justify-between content-center`}
             >
               <Text style={tw`text-2xl font-bold`}>Tickets</Text>
               <Image
