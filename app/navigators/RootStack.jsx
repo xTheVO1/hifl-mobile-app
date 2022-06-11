@@ -11,7 +11,7 @@ const RootStack = () => {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator screenOptions={{ presentation: "transparentModal" }}>
         <Stack.Screen name="login" component={Login} options={{ title: "", headerShown: false }} />
         <Stack.Screen name="home" component={Home} options={{ title: "", headerShown: false }} />
         <Stack.Screen name="newFan" component={NewFan} options={{ title: "", headerShown: false }} />
