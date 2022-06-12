@@ -7,7 +7,6 @@ const API = axios.create({ baseURL: BASE_URL });
 API.interceptors.request.use((req) => {
   AsyncStorage.getItem("user").then((res) => {
     if (res !== null) {
-      console.log(JSON.parse(res).data.accessToken, "bearer token");
       req.headers.Authorization = `Bearer ${JSON.parse(res).data.accessToken}`;
     }
   });

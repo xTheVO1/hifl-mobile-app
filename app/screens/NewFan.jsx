@@ -39,7 +39,7 @@ const NewFan = ({ navigation }) => {
     lastName: "",
     email: "",
     phoneNumber: "",
-    createdBy: "",
+    //createdBy: "",
   };
   const [fan, setFan] = useState(initialState);
   const { loading } = useSelector((state) => state.fan);
@@ -53,8 +53,14 @@ const NewFan = ({ navigation }) => {
   };
   const handleSubmit = () => {
     const tickets = [{ ticketNo: fan.ticket, ticketDate: new Date() }];
-    const payload = { ...fan, createdBy: currentUser._id, tickets };
-    // console.log(payload, "payload");
+    const payload = {
+      firstName: fan.firstName,
+      lastName: fan.lastName,
+      email: fan.email,
+      phoneNumber: fan.phoneNumber,
+      tickets,
+    };
+    console.log(payload, "payload");
     dispatch(registerFan({ payload, AsyncStorage, alertModal }));
   };
   useEffect(() => {
