@@ -2,13 +2,13 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import * as api from "../api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export const login = createAsyncThunk("/auth/login", async ({ payload, AsyncStorage }, { rejectWithValue }) => {
+export const login = createAsyncThunk("/auth/login", async ({ payload, alertModal }, { rejectWithValue }) => {
   try {
     const response = await api.signIn(payload);
     console.log(response.data, "user just logged in");
     return response.data;
   } catch (err) {
-    console.log(err.response.data.message, "error occured");
+    alertModal("Oops", err.response.data.message);
     return rejectWithValue(err.response.data);
   }
 });
@@ -47,7 +47,7 @@ const authSlice = createSlice({
     [login.fulfilled]: (state, action) => {
       state.loading = false;
       AsyncStorage.setItem("user", JSON.stringify({ ...action.payload }));
-      state.user = action.payload;
+      state.user = action.payload.data;
     },
     [login.rejected]: (state, action) => {
       state.loading = false;

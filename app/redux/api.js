@@ -4,13 +4,13 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const API = axios.create({ baseURL: BASE_URL });
 
-API.interceptors.request.use((req) => {
-  AsyncStorage.getItem("user").then((res) => {
+AsyncStorage.getItem("user").then((res) => {
+  API.interceptors.request.use((req) => {
     if (res !== null) {
       req.headers.Authorization = `Bearer ${JSON.parse(res).data.accessToken}`;
     }
+    return req;
   });
-  return req;
 });
 
 export const signIn = (formData) => API.post("/auth/login", formData);

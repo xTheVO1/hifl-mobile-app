@@ -12,12 +12,11 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import tw from "../lib/tailwind";
-import { BASE_URL } from "@env";
 import { alertModal } from "../helpers/utils";
 import { useSelector, useDispatch } from "react-redux";
 import { login } from "../redux/features/auth.slice";
 
-const Login = ({ navigation }) => {
+const Login = () => {
   const initialState = { email: "", password: "" };
   const [userData, setUserData] = useState(initialState);
   const { loading, user } = useSelector((state) => state.auth);
@@ -30,7 +29,7 @@ const Login = ({ navigation }) => {
     if (userData.email && userData.password) {
       const payload = { Email: userData.email.trim(), Password: userData.password.trim() };
       // console.log(payload);
-      dispatch(login({ payload, AsyncStorage }));
+      dispatch(login({ payload, AsyncStorage, alertModal }));
     }
   };
 

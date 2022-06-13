@@ -30,6 +30,17 @@ const Item = ({ title }) => (
 );
 
 const FanDetail = ({ navigation }) => {
+  const initialState = {
+    firstName: "",
+    lastName: "",
+    email: "",
+    phoneNumber: "",
+    createdBy: "",
+  };
+  const [fan, setFan] = useState(initialState);
+  const [loading, setLoading] = useState(false);
+  const [open, setOpen] = useState(false);
+  // const [fanTickets, setFanTickets] = useState([{ ticketNo: "", ticketDate }]);
   const dispatch = useDispatch();
 
   const handleSubmit = () => {
@@ -41,15 +52,11 @@ const FanDetail = ({ navigation }) => {
   const handleLogout = () => {
     dispatch(logout());
   };
-  const initialState = {
-    firstName: "",
-    lastName: "",
-    email: "",
-    phoneNumber: "",
-    createdBy: "",
+
+  const addTicket = () => {
+    setFanTickets([...fanTickets]);
   };
-  const [fan, setFan] = useState(initialState);
-  const [loading, setLoading] = useState(false);
+
   return (
     <SafeAreaView style={tw`bg-secondary h-full relative`}>
       <ScrollView style={tw`flex flex-col bg-secondary`}>
@@ -105,8 +112,23 @@ const FanDetail = ({ navigation }) => {
             />
             <View style={tw`flex flex-row border-b border-b-[#F4C316] mt-5 mb-5 justify-between content-center`}>
               <Text style={tw`text-2xl font-bold`}>Tickets</Text>
-              <Image source={require("../assets/icons/added.png")} style={tw`w-[48px] h-[48px]`} />
+              <TouchableOpacity activeOpacity={0.7} onPress={() => setOpen(true)}>
+                <Image source={require("../assets/icons/added.png")} style={tw`w-[48px] h-[48px]`} />
+              </TouchableOpacity>
             </View>
+
+            {open && (
+              <TextInput
+                style={tw`py-3 text-sm border w-full border-[#E5E5E5] focus:border-primary rounded px-4 mb-4 focus:outline-none`}
+                placeholder="Ticket Number"
+                name="ticket"
+                onChangeText={(value) => setFan({ ...fan, ticket: value })}
+                value={fan.ticket}
+                secureTextEntry
+                keyboardType="number-pad"
+                autoComplete="off"
+              />
+            )}
 
             <TextInput
               style={tw`py-3 text-sm border w-full border-[#E5E5E5] focus:border-primary rounded px-4 mb-10 focus:outline-none`}

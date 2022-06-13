@@ -16,6 +16,7 @@ import { logout } from "../redux/features/auth.slice";
 import { registerFan } from "../redux/features/fan.slice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { alertModal } from "../helpers/utils";
+import { format } from "date-fns";
 
 const Gender = [
   {
@@ -39,7 +40,6 @@ const NewFan = ({ navigation }) => {
     lastName: "",
     email: "",
     phoneNumber: "",
-    //createdBy: "",
   };
   const [fan, setFan] = useState(initialState);
   const { loading } = useSelector((state) => state.fan);
@@ -52,21 +52,22 @@ const NewFan = ({ navigation }) => {
     dispatch(logout());
   };
   const handleSubmit = () => {
-    const tickets = [{ ticketNo: fan.ticket, ticketDate: new Date() }];
+    const date = format(new Date(), "yyyy-mm-dd");
+    const tickets = [{ TicketNo: fan.ticket, TicketDate: date }];
     const payload = {
-      firstName: fan.firstName,
-      lastName: fan.lastName,
-      email: fan.email,
-      phoneNumber: fan.phoneNumber,
-      tickets,
+      FirstName: fan.firstName,
+      LastName: fan.lastName,
+      Email: fan.email,
+      PhoneNumber: fan.phoneNumber,
+      CreatedBy: currentUser._id,
+      Tickets: tickets,
     };
-    console.log(payload, "payload");
-    dispatch(registerFan({ payload, AsyncStorage, alertModal }));
+    // console.log(payload, "payload");
+    dispatch(registerFan({ payload, AsyncStorage, alertModal, navigation }));
   };
   useEffect(() => {
     AsyncStorage.getItem("user").then((res) => {
       if (res !== null) {
-        console.log(JSON.parse(res).data.accessToken);
         setCurrentUser(JSON.parse(res).data.User);
       }
     });

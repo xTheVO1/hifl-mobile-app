@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import {
   View,
   Text,
@@ -13,8 +13,60 @@ import {
 import tw from "../lib/tailwind";
 import { format } from "date-fns";
 import { useFocusEffect } from "@react-navigation/native";
+import { BASE_URL } from "@env";
+import axios from "axios";
+import { useSelector } from "react-redux";
+import EmptyList from "../components/EmptyList";
 
 const dummySchema = [
+  {
+    FirstName: "Awaya",
+    LastName: "Akinsola",
+    Email: "mondey@gmail.com",
+    PhoneNumber: 809765435,
+    Tickets: [],
+    CreatedBy: "6229c921b98660b4c87ffd17",
+    _id: "62a5808bc1469663ba119675",
+    createdAt: "2022-06-12T05:58:35.927Z",
+    updatedAt: "2022-05-01T05:58:35.927Z",
+    __v: 0,
+  },
+  {
+    FirstName: "Fejiro",
+    LastName: "Ogunje",
+    Email: "ogunjefejiro@gmail.com",
+    PhoneNumber: 809765435,
+    Tickets: [{}],
+    CreatedBy: "6229c921b98660b4c87ffd17",
+    _id: "62a5808bc1469663ba119675d",
+    createdAt: "2022-06-12T05:58:35.927Z",
+    updatedAt: "2022-06-12T05:58:35.927Z",
+    __v: 0,
+  },
+  {
+    FirstName: "Awaya",
+    LastName: "Akinsola",
+    Email: "mondey@gmail.com",
+    PhoneNumber: 809765435,
+    Tickets: [],
+    CreatedBy: "6229c921b98660b4c87ffd17",
+    _id: "62a5808bc1469663ba119675",
+    createdAt: "2022-06-12T05:58:35.927Z",
+    updatedAt: "2022-05-01T05:58:35.927Z",
+    __v: 0,
+  },
+  {
+    FirstName: "Fejiro",
+    LastName: "Ogunje",
+    Email: "ogunjefejiro@gmail.com",
+    PhoneNumber: 809765435,
+    Tickets: [{}],
+    CreatedBy: "6229c921b98660b4c87ffd17",
+    _id: "62a5808bc1469663ba119675d",
+    createdAt: "2022-06-12T05:58:35.927Z",
+    updatedAt: "2022-06-12T05:58:35.927Z",
+    __v: 0,
+  },
   {
     FirstName: "Awaya",
     LastName: "Akinsola",
@@ -60,7 +112,7 @@ const Item = ({ item }) => (
         <Image source={require("../assets/icons/girl.png")} style={tw`w-[48px] h-[48px] mr-5`} />
         <View style={tw`flex flex-col content-center`}>
           <Text style={tw`text-[#000229] text-lg font-light	`}>
-            {item.FirstName} {item.LastName}
+            {item?.FirstName} {item.LastName}
           </Text>
           <Text style={tw`text-xs text-[#0013FF] font-light	uppercase`}>
             {item.Tickets.length} {item.Tickets.lenght > 1 ? "Tickets" : "Ticket"}
@@ -76,21 +128,25 @@ const Item = ({ item }) => (
 );
 
 const Home = ({ navigation }) => {
-  const initialState = { email: "", password: "" };
-  const [user, setUser] = useState(initialState);
+  const [fans, setFans] = useState([]);
+  const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(false);
   const [searchValue, setsearchValue] = useState("");
-  const [filteredData, setFilteredData] = useState(dummySchema);
+  const [filteredData, setFilteredData] = useState([]);
+
+  const { user } = useSelector((state) => state.auth);
+  console.log(user, "user det");
 
   const handleSearch = (value) => {
     setsearchValue(value);
     let result = [];
-    result = dummySchema.filter((data) => data.FirstName.toLowerCase().includes(value.toLowerCase()));
+    result = filteredData.filter((data) => data.FirstName.toLowerCase().includes(value.toLowerCase()));
     if (value) {
       setFilteredData(result);
-    } else {
-      setFilteredData(dummySchema);
     }
+    // else {
+    //   setFilteredData(dummySchema);
+    // }
   };
   const handleSubmit = () => {
     navigation.navigate("newFan");
@@ -99,18 +155,40 @@ const Home = ({ navigation }) => {
     navigation.navigate("fanDetail", { id });
     console.log(id);
   };
+
+  const getFans = async () => {
+    setLoading(true);
+
+    await axios(`${BASE_URL}/volunteers/fans/all?CreatedBy=6297a43b9a996c92173a9c2a`, {
+      headers: { Authorization: user.accessToken },
+    })
+      .then((res) => {
+        console.log(res.data);
+        setFilteredData(res.data.data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.log(err.response.data);
+        setLoading(false);
+      });
+  };
+  useEffect(() => {
+    getFans();
+  }, []);
+
+  //clear search value and filtered array when navigating back here
+  useFocusEffect(
+    useCallback(() => {
+      //setFilteredData(dummySchema);
+      setsearchValue("");
+      return () => {};
+    }, [])
+  );
+
   const renderItem = ({ item }) => (
     <Pressable onPress={() => handleFan(item._id)}>
       <Item item={item} />
     </Pressable>
-  );
-
-  useFocusEffect(
-    useCallback(() => {
-      setFilteredData(dummySchema);
-      setsearchValue("");
-      return () => {};
-    }, [])
   );
 
   return (
@@ -133,8 +211,13 @@ const Home = ({ navigation }) => {
           autoComplete="off"
         />
 
-        <View style={tw` mt-4 mb-8 w-full`}>
-          <FlatList data={filteredData} renderItem={renderItem} keyExtractor={(item) => item._id} />
+        <View style={tw`mt-4 mb-8 w-full`}>
+          <FlatList
+            data={filteredData}
+            renderItem={renderItem}
+            keyExtractor={(item) => item._id}
+            ListEmptyComponent={<EmptyList />}
+          />
         </View>
       </View>
       <TouchableOpacity activeOpacity={0.7} onPress={handleSubmit} style={tw`absolute bottom-8 right-6`}>

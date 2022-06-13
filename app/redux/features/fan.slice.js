@@ -4,14 +4,14 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const registerFan = createAsyncThunk(
   "/volunteers/fans/fan/register",
-  async ({ payload, AsyncStorage, alertModal }, { rejectWithValue }) => {
+  async ({ payload, navigation, alertModal }, { rejectWithValue }) => {
     try {
+      console.log(payload, "register fan");
       const response = await api.fanSignup(payload);
-      alertModal("Hurray!", "Fan was successfully registered");
+      alertModal("Hurray!", "Fan was successfully registered", () => navigation.goBack());
       return response.data;
     } catch (err) {
-      alertModal("Oops!", "An error occured");
-      console.log(err.response.data.message, "error occured");
+      alertModal("Oops!", "An error occured, please try again");
       return rejectWithValue(err.response.data);
     }
   }
@@ -67,8 +67,8 @@ const fanSlice = createSlice({
     },
     [registerFan.fulfilled]: (state, action) => {
       state.loading = false;
-      AsyncStorage.setItem("user", JSON.stringify({ ...action.payload }));
-      state.user = action.payload;
+      // AsyncStorage.setItem("fan", JSON.stringify({ ...action.payload }));
+      // state.fan = action.payload;
     },
     [registerFan.rejected]: (state, action) => {
       state.loading = false;
@@ -80,8 +80,8 @@ const fanSlice = createSlice({
     },
     [updateFan.fulfilled]: (state, action) => {
       state.loading = false;
-      AsyncStorage.setItem("user", JSON.stringify({ ...action.payload }));
-      state.user = action.payload;
+      // AsyncStorage.setItem("user", JSON.stringify({ ...action.payload }));
+      //state.fan = action.payload;
     },
     [updateFan.rejected]: (state, action) => {
       state.loading = false;
