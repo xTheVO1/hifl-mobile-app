@@ -13,98 +13,9 @@ import {
 import tw from "../lib/tailwind";
 import { format } from "date-fns";
 import { useFocusEffect } from "@react-navigation/native";
-import { BASE_URL } from "@env";
-import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchFans } from "../redux/features/fan.slice";
 import EmptyList from "../components/EmptyList";
-
-const dummySchema = [
-  {
-    FirstName: "Awaya",
-    LastName: "Akinsola",
-    Email: "mondey@gmail.com",
-    PhoneNumber: 809765435,
-    Tickets: [],
-    CreatedBy: "6229c921b98660b4c87ffd17",
-    _id: "62a5808bc1469663ba119675",
-    createdAt: "2022-06-12T05:58:35.927Z",
-    updatedAt: "2022-05-01T05:58:35.927Z",
-    __v: 0,
-  },
-  {
-    FirstName: "Fejiro",
-    LastName: "Ogunje",
-    Email: "ogunjefejiro@gmail.com",
-    PhoneNumber: 809765435,
-    Tickets: [{}],
-    CreatedBy: "6229c921b98660b4c87ffd17",
-    _id: "62a5808bc1469663ba119675d",
-    createdAt: "2022-06-12T05:58:35.927Z",
-    updatedAt: "2022-06-12T05:58:35.927Z",
-    __v: 0,
-  },
-  {
-    FirstName: "Awaya",
-    LastName: "Akinsola",
-    Email: "mondey@gmail.com",
-    PhoneNumber: 809765435,
-    Tickets: [],
-    CreatedBy: "6229c921b98660b4c87ffd17",
-    _id: "62a5808bc1469663ba119675",
-    createdAt: "2022-06-12T05:58:35.927Z",
-    updatedAt: "2022-05-01T05:58:35.927Z",
-    __v: 0,
-  },
-  {
-    FirstName: "Fejiro",
-    LastName: "Ogunje",
-    Email: "ogunjefejiro@gmail.com",
-    PhoneNumber: 809765435,
-    Tickets: [{}],
-    CreatedBy: "6229c921b98660b4c87ffd17",
-    _id: "62a5808bc1469663ba119675d",
-    createdAt: "2022-06-12T05:58:35.927Z",
-    updatedAt: "2022-06-12T05:58:35.927Z",
-    __v: 0,
-  },
-  {
-    FirstName: "Awaya",
-    LastName: "Akinsola",
-    Email: "mondey@gmail.com",
-    PhoneNumber: 809765435,
-    Tickets: [],
-    CreatedBy: "6229c921b98660b4c87ffd17",
-    _id: "62a5808bc1469663ba119675",
-    createdAt: "2022-06-12T05:58:35.927Z",
-    updatedAt: "2022-05-01T05:58:35.927Z",
-    __v: 0,
-  },
-  {
-    FirstName: "Fejiro",
-    LastName: "Ogunje",
-    Email: "ogunjefejiro@gmail.com",
-    PhoneNumber: 809765435,
-    Tickets: [{}],
-    CreatedBy: "6229c921b98660b4c87ffd17",
-    _id: "62a5808bc1469663ba119675d",
-    createdAt: "2022-06-12T05:58:35.927Z",
-    updatedAt: "2022-06-12T05:58:35.927Z",
-    __v: 0,
-  },
-  {
-    FirstName: "Joshua",
-    LastName: "Alexander",
-    Email: "alex@gmail.com",
-    PhoneNumber: 809765435,
-    Tickets: [],
-    CreatedBy: "6229c921b98660b4c87ffd17",
-    _id: "62a5808bc1469663ba119675t",
-    createdAt: "2022-06-12T05:58:35.927Z",
-    updatedAt: "2022-06-12T05:58:35.927Z",
-    __v: 0,
-  },
-];
 
 const Item = ({ item }) => (
   <View style={tw`w-full p-5 my-1 flex flex-col content-center bg-[#FAFAFA]`}>
@@ -129,7 +40,6 @@ const Item = ({ item }) => (
 );
 
 const Home = ({ navigation }) => {
-  const [currentUser, setCurrentUser] = useState(null);
   const [searchValue, setsearchValue] = useState("");
 
   const dispatch = useDispatch();
@@ -137,7 +47,7 @@ const Home = ({ navigation }) => {
   const { user } = useSelector((state) => state.auth);
   const { fans, loading } = useSelector((state) => state.fan);
   const [filteredData, setFilteredData] = useState([]);
-  console.log(fans, "fan det");
+  // console.log(user, "fan det");
 
   const handleSearch = (value) => {
     setsearchValue(value);
@@ -161,11 +71,6 @@ const Home = ({ navigation }) => {
     dispatch(fetchFans({ userId, setFilteredData }));
   };
 
-  useEffect(() => {
-    //getFans();
-  }, []);
-
-  //clear search value and filtered array when navigating back here
   useFocusEffect(
     useCallback(() => {
       getFans();
@@ -200,7 +105,7 @@ const Home = ({ navigation }) => {
           autoComplete="off"
         />
 
-        <View style={tw`mt-4 mb-8 w-full`}>
+        <View style={tw`flex flex-col mt-4 mb-30 w-full`}>
           {loading ? (
             <View style={tw`mt-10 flex justify-center items-center`}>
               <ActivityIndicator size="large" color="#000229" />
