@@ -142,13 +142,12 @@ const Home = ({ navigation }) => {
   const handleSearch = (value) => {
     setsearchValue(value);
     let result = [];
-    result = filteredData.filter((data) => data.FirstName.toLowerCase().includes(value.toLowerCase()));
+    result = fans.filter((data) => data.FirstName.toLowerCase().includes(value.toLowerCase()));
     if (value) {
       setFilteredData(result);
+    } else {
+      setFilteredData(fans);
     }
-    // else {
-    //   setFilteredData(dummySchema);
-    // }
   };
   const handleSubmit = () => {
     navigation.navigate("newFan");
@@ -163,13 +162,13 @@ const Home = ({ navigation }) => {
   };
 
   useEffect(() => {
-    getFans();
+    //getFans();
   }, []);
 
   //clear search value and filtered array when navigating back here
   useFocusEffect(
     useCallback(() => {
-      setFilteredData(fans);
+      getFans();
       setsearchValue("");
       return () => {};
     }, [])

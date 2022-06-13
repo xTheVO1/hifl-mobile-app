@@ -83,7 +83,7 @@ const fanSlice = createSlice({
     [registerFan.fulfilled]: (state, action) => {
       state.loading = false;
       // AsyncStorage.setItem("fan", JSON.stringify({ ...action.payload }));
-      // state.fan = action.payload;
+      //state.fans = action.payload;
     },
     [registerFan.rejected]: (state, action) => {
       state.loading = false;
