@@ -15,7 +15,8 @@ import { format } from "date-fns";
 import { useFocusEffect } from "@react-navigation/native";
 import { BASE_URL } from "@env";
 import axios from "axios";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchFans } from "../redux/features/fan.slice";
 import EmptyList from "../components/EmptyList";
 
 const dummySchema = [
@@ -128,14 +129,15 @@ const Item = ({ item }) => (
 );
 
 const Home = ({ navigation }) => {
-  const [fans, setFans] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
-  const [loading, setLoading] = useState(false);
   const [searchValue, setsearchValue] = useState("");
-  const [filteredData, setFilteredData] = useState([]);
+
+  const dispatch = useDispatch();
 
   const { user } = useSelector((state) => state.auth);
-  console.log(user, "user det");
+  const { fans, loading } = useSelector((state) => state.fan);
+  const [filteredData, setFilteredData] = useState([]);
+  console.log(fans, "fan det");
 
   const handleSearch = (value) => {
     setsearchValue(value);
@@ -155,23 +157,11 @@ const Home = ({ navigation }) => {
     navigation.navigate("fanDetail", { id });
     console.log(id);
   };
-
-  const getFans = async () => {
-    setLoading(true);
-
-    await axios(`${BASE_URL}/volunteers/fans/all?CreatedBy=6297a43b9a996c92173a9c2a`, {
-      headers: { Authorization: user.accessToken },
-    })
-      .then((res) => {
-        console.log(res.data);
-        setFilteredData(res.data.data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.log(err.response.data);
-        setLoading(false);
-      });
+  const getFans = () => {
+    const userId = user.User._id;
+    dispatch(fetchFans({ userId, setFilteredData }));
   };
+
   useEffect(() => {
     getFans();
   }, []);
@@ -179,7 +169,7 @@ const Home = ({ navigation }) => {
   //clear search value and filtered array when navigating back here
   useFocusEffect(
     useCallback(() => {
-      //setFilteredData(dummySchema);
+      setFilteredData(fans);
       setsearchValue("");
       return () => {};
     }, [])
@@ -212,12 +202,18 @@ const Home = ({ navigation }) => {
         />
 
         <View style={tw`mt-4 mb-8 w-full`}>
-          <FlatList
-            data={filteredData}
-            renderItem={renderItem}
-            keyExtractor={(item) => item._id}
-            ListEmptyComponent={<EmptyList />}
-          />
+          {loading ? (
+            <View style={tw`mt-10 flex justify-center items-center`}>
+              <ActivityIndicator size="large" color="#000229" />
+            </View>
+          ) : (
+            <FlatList
+              data={filteredData}
+              renderItem={renderItem}
+              keyExtractor={(item) => item._id}
+              ListEmptyComponent={<EmptyList />}
+            />
+          )}
         </View>
       </View>
       <TouchableOpacity activeOpacity={0.7} onPress={handleSubmit} style={tw`absolute bottom-8 right-6`}>

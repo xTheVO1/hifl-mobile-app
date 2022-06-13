@@ -32,6 +32,21 @@ export const updateFan = createAsyncThunk(
   }
 );
 
+export const fetchFans = createAsyncThunk(
+  "/volunteers/fans/all",
+  async ({ userId, setFilteredData }, { rejectWithValue }) => {
+    try {
+      const response = await api.getFans(userId);
+      //console.log(response.data.data, "all fans");
+      setFilteredData(response.data.data);
+      return response.data.data;
+    } catch (err) {
+      console.log(err.response.data.message, "error occured");
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+
 //RETURN USER OBJECT IF LOGGED IN
 // export const isLoggedIn = () => {
 //   if (typeof window === "undefined") {
@@ -46,7 +61,7 @@ export const updateFan = createAsyncThunk(
 const fanSlice = createSlice({
   name: "fan",
   initialState: {
-    fan: null,
+    fans: null,
     error: "",
     loading: false,
   },
@@ -84,6 +99,19 @@ const fanSlice = createSlice({
       //state.fan = action.payload;
     },
     [updateFan.rejected]: (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    },
+
+    [fetchFans.pending]: (state) => {
+      state.loading = true;
+    },
+    [fetchFans.fulfilled]: (state, action) => {
+      state.loading = false;
+      AsyncStorage.setItem("fans", JSON.stringify({ ...action.payload }));
+      state.fans = action.payload;
+    },
+    [fetchFans.rejected]: (state, action) => {
       state.loading = false;
       state.error = action.payload;
     },

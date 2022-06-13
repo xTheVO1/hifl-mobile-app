@@ -16,5 +16,5 @@ AsyncStorage.getItem("user").then((res) => {
 export const signIn = (formData) => API.post("/auth/login", formData);
 export const fanSignup = (formData) => API.post("/volunteers/fans/fan/register", formData);
 export const fanUpdate = (formData) => API.patch("/volunteers/fans/fan/update", formData);
-// export const allFans = (formData) => API.get("/volunteers/fans/fan/register", formData);
+export const getFans = (userId) => API.get(`/volunteers/fans/all?CreatedBy=${userId}`);
 // export const signleFan = (formData) => API.get("/volunteers/fans/fan/register", formData);
