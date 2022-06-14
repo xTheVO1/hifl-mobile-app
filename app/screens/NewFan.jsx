@@ -53,17 +53,17 @@ const NewFan = ({ navigation }) => {
   };
   const handleSubmit = () => {
     const date = format(new Date(), "yyyy-mm-dd");
-    const tickets = [{ TicketNo: fan.ticket, TicketDate: date }];
+    const tickets = [{ TicketNo: fan.ticket.trim(), TicketDate: date }];
     const payload = {
-      FirstName: fan.firstName,
-      LastName: fan.lastName,
-      Email: fan.email,
-      PhoneNumber: fan.phoneNumber,
+      FirstName: fan.firstName.trim(),
+      LastName: fan.lastName.trim(),
+      Email: fan.email.trim(),
+      PhoneNumber: fan.phoneNumber.trim(),
       CreatedBy: currentUser._id,
       Tickets: tickets,
     };
-    // console.log(payload, "payload");
-    dispatch(registerFan({ payload, AsyncStorage, alertModal, navigation }));
+    console.log(payload, "payload");
+    //dispatch(registerFan({ payload, AsyncStorage, alertModal, navigation }));
   };
   useEffect(() => {
     AsyncStorage.getItem("user").then((res) => {

@@ -13,8 +13,11 @@ import {
   SectionList,
 } from "react-native";
 import tw from "../lib/tailwind";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../redux/features/auth.slice";
+import { updateFan } from "../redux/features/fan.slice";
+import { format } from "date-fns";
+import { roundToNearestPixel } from "react-native/Libraries/Utilities/PixelRatio";
 
 const Gender = [
   {
@@ -29,22 +32,33 @@ const Item = ({ title }) => (
   </View>
 );
 
-const FanDetail = ({ navigation }) => {
+const FanDetail = ({ navigation, route }) => {
   const initialState = {
-    firstName: "",
-    lastName: "",
-    email: "",
-    phoneNumber: "",
-    createdBy: "",
+    FirstName: "",
+    LastName: "",
+    Email: "",
+    PhoneNumber: "",
+    Tickets: [{ TicketNo: "45678", TicketDate: "2022-06-08" }],
+    NewTicket: "",
   };
   const [fan, setFan] = useState(initialState);
-  const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
-  // const [fanTickets, setFanTickets] = useState([{ ticketNo: "", ticketDate }]);
+  const { loading } = useSelector((state) => state.fan);
   const dispatch = useDispatch();
 
   const handleSubmit = () => {
-    console.log("Clicked");
+    const date = format(new Date(), "yyyy-mm-dd");
+    const ticket = fan.NewTicket ? [{ TicketNo: fan.NewTicket.trim(), TicketDate: date }] : "";
+    const payload = {
+      id: route.params.id,
+      FirstName: fan.FirstName.trim(),
+      LastName: fan.LastName.trim(),
+      Email: fan.Email.trim(),
+      PhoneNumber: fan.PhoneNumber.trim(),
+      Tickets: [...fan.Tickets, ...ticket],
+    };
+    console.log(payload, "payload");
+    //dispatch(registerFan({ payload, AsyncStorage, alertModal, navigation }));
   };
   const handleHome = () => {
     navigation.navigate("home");
@@ -79,24 +93,24 @@ const FanDetail = ({ navigation }) => {
               style={tw`py-3 text-sm border w-full border-[#E5E5E5] focus:border-primary rounded px-4 mb-6 focus:outline-none`}
               placeholder="First Name"
               name="firstName"
-              onChangeText={(value) => setFan({ ...fan, firstName: value })}
-              value={fan.firstName}
+              onChangeText={(value) => setFan({ ...fan, FirstName: value })}
+              value={fan.FirstName}
               autoComplete="off"
             />
             <TextInput
               style={tw`py-3 text-sm border w-full border-[#E5E5E5] focus:border-primary rounded px-4 mb-6 focus:outline-none`}
               placeholder="Last Name"
               name="lastName"
-              onChangeText={(value) => setFan({ ...fan, lastName: value })}
-              value={fan.lastName}
+              onChangeText={(value) => setFan({ ...fan, LastName: value })}
+              value={fan.LastName}
               autoComplete="off"
             />
             <TextInput
               style={tw`py-3 text-sm border w-full border-[#E5E5E5] focus:border-primary rounded px-4 mb-6 focus:outline-none`}
               placeholder="Phone Number"
               name="phoneNumber"
-              onChangeText={(value) => setFan({ ...fan, phoneNumber: value })}
-              value={fan.phoneNumber}
+              onChangeText={(value) => setFan({ ...fan, PhoneNumber: value })}
+              value={fan.PhoneNumber}
               keyboardType="number-pad"
               maxLength={11}
               autoComplete="off"
@@ -105,8 +119,8 @@ const FanDetail = ({ navigation }) => {
               style={tw`py-3 text-sm border w-full border-[#E5E5E5] focus:border-primary rounded px-4 focus:outline-none`}
               placeholder="Email Address"
               name="email"
-              onChangeText={(value) => setFan({ ...fan, email: value })}
-              value={fan.email}
+              onChangeText={(value) => setFan({ ...fan, Email: value })}
+              value={fan.Email}
               keyboardType="email-address"
               autoComplete="off"
             />
@@ -122,20 +136,21 @@ const FanDetail = ({ navigation }) => {
                 style={tw`py-3 text-sm border w-full border-[#E5E5E5] focus:border-primary rounded px-4 mb-4 focus:outline-none`}
                 placeholder="Ticket Number"
                 name="ticket"
-                onChangeText={(value) => setFan({ ...fan, ticket: value })}
-                value={fan.ticket}
+                onChangeText={(value) => setFan({ ...fan, NewTicket: value })}
+                value={fan.NewTicket}
                 secureTextEntry
                 keyboardType="number-pad"
                 autoComplete="off"
               />
             )}
 
+            {/* display current tickets here as a box */}
             <TextInput
               style={tw`py-3 text-sm border w-full border-[#E5E5E5] focus:border-primary rounded px-4 mb-10 focus:outline-none`}
               placeholder="Ticket Number"
               name="ticket"
               onChangeText={(value) => setFan({ ...fan, ticket: value })}
-              value={fan.ticket}
+              value={fan.Tickets[0].TicketNo}
               secureTextEntry
               keyboardType="number-pad"
               autoComplete="off"

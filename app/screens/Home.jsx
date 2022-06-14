@@ -47,7 +47,7 @@ const Home = ({ navigation }) => {
   const { user } = useSelector((state) => state.auth);
   const { fans, loading } = useSelector((state) => state.fan);
   const [filteredData, setFilteredData] = useState([]);
-  // console.log(user, "fan det");
+  console.log(user, "fan det");
 
   const handleSearch = (value) => {
     setsearchValue(value);
@@ -89,7 +89,7 @@ const Home = ({ navigation }) => {
     <SafeAreaView style={tw`bg-secondary h-full relative`}>
       <View style={tw`h-[200px] flex flex-col justify-end pb-5`}>
         <View style={tw`flex flex-row justify-between items-center px-6`}>
-          <Text style={tw`text-[#fff] font-bold text-2xl`}>Hi Feji,</Text>
+          <Text style={tw`text-[#fff] font-bold text-2xl capitalize`}>Hi {user?.User.Firstname || "there"},</Text>
           <Image source={require("../assets/hifl_icon.png")} style={tw`w-[50px]`} />
         </View>
       </View>

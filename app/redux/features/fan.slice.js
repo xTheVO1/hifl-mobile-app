@@ -7,7 +7,7 @@ export const fetchFans = createAsyncThunk(
   async ({ userId, setFilteredData }, { rejectWithValue }) => {
     try {
       const response = await api.getFans(userId);
-      setFilteredData(response.data.data);
+      setFilteredData(response.data.data.reverse());
       return response.data.data;
     } catch (err) {
       console.log(err.response.data.message, "error occured");
