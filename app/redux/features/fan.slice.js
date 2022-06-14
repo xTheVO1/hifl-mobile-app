@@ -31,15 +31,20 @@ export const registerFan = createAsyncThunk(
   }
 );
 
-export const fetchSingleFan = createAsyncThunk("/volunteers/fans/fan", async ({ userId }, { rejectWithValue }) => {
-  try {
-    const response = await api.getSingleFan(userId);
-    return response.data.data;
-  } catch (err) {
-    console.log(err.response.data.message, "error occured");
-    return rejectWithValue(err.response.data);
+export const fetchSingleFan = createAsyncThunk(
+  "/volunteers/fans/fan",
+  async ({ fanId, setFan }, { rejectWithValue }) => {
+    try {
+      const response = await api.getSingleFan(fanId);
+      console.log(response.data.data, "single fan");
+      setFan(response.data.data);
+      return response.data.data;
+    } catch (err) {
+      console.log(err.response.data.message, "error occured");
+      return rejectWithValue(err.response.data);
+    }
   }
-});
+);
 
 export const updateFan = createAsyncThunk(
   "/volunteers/fans/fan/update",
@@ -62,6 +67,7 @@ const fanSlice = createSlice({
     singleFan: null,
     error: "",
     loading: false,
+    fanLoading: false,
   },
 
   reducers: {
@@ -104,15 +110,15 @@ const fanSlice = createSlice({
     },
 
     [fetchSingleFan.pending]: (state) => {
-      state.loading = true;
+      state.fanLoading = true;
     },
     [fetchSingleFan.fulfilled]: (state, action) => {
-      state.loading = false;
+      state.fanLoading = false;
       // AsyncStorage.setItem("fans", JSON.stringify({ ...action.payload }));
       state.singleFan = action.payload;
     },
     [fetchSingleFan.rejected]: (state, action) => {
-      state.loading = false;
+      state.fanLoading = false;
       state.error = action.payload;
     },
 

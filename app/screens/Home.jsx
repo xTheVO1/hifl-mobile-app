@@ -47,7 +47,7 @@ const Home = ({ navigation }) => {
   const { user } = useSelector((state) => state.auth);
   const { fans, loading } = useSelector((state) => state.fan);
   const [filteredData, setFilteredData] = useState([]);
-  console.log(user, "fan det");
+  // console.log(user, "fan det");
 
   const handleSearch = (value) => {
     setsearchValue(value);

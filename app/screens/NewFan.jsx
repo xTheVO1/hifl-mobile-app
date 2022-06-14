@@ -52,8 +52,8 @@ const NewFan = ({ navigation }) => {
     dispatch(logout());
   };
   const handleSubmit = () => {
-    const date = format(new Date(), "yyyy-mm-dd");
-    const tickets = [{ TicketNo: fan.ticket.trim(), TicketDate: date }];
+    const date = format(new Date(), "yyyy-MM-dd");
+    const tickets = [{ TicketNo: fan.ticket, TicketDate: date }];
     const payload = {
       FirstName: fan.firstName.trim(),
       LastName: fan.lastName.trim(),
@@ -62,8 +62,14 @@ const NewFan = ({ navigation }) => {
       CreatedBy: currentUser._id,
       Tickets: tickets,
     };
-    console.log(payload, "payload");
-    //dispatch(registerFan({ payload, AsyncStorage, alertModal, navigation }));
+
+    if (fan.firstName == "" || fan.lastName == "" || fan.email == "" || fan.phoneNumber == "" || fan.ticket == "") {
+      return alertModal("Oops!", "Please all fields are required");
+    }
+    if (fan.firstName && fan.lastName && fan.email && fan.phoneNumber && fan.ticket) {
+      //dispatch(registerFan({ payload, AsyncStorage, alertModal, navigation }));
+      console.log(payload, "payload");
+    }
   };
   useEffect(() => {
     AsyncStorage.getItem("user").then((res) => {
