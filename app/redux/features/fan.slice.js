@@ -6,6 +6,7 @@ export const fetchFans = createAsyncThunk(
   "/volunteers/fans/all",
   async ({ userId, setFilteredData }, { rejectWithValue }) => {
     try {
+      // console.log(userId, "id");
       const response = await api.getFans(userId);
       setFilteredData(response.data.data.reverse());
       return response.data.data;
@@ -20,7 +21,7 @@ export const registerFan = createAsyncThunk(
   "/volunteers/fans/fan/register",
   async ({ payload, navigation, alertModal }, { rejectWithValue }) => {
     try {
-      console.log(payload, "register fan");
+      // console.log(payload, "register fan");
       const response = await api.fanSignup(payload);
       alertModal("Hurray!", "Fan was successfully registered", () => navigation.goBack());
       return response.data;
@@ -36,7 +37,7 @@ export const fetchSingleFan = createAsyncThunk(
   async ({ fanId, setFan }, { rejectWithValue }) => {
     try {
       const response = await api.getSingleFan(fanId);
-      console.log(response.data.data, "single fan");
+      // console.log(response.data.data, "single fan");
       setFan(response.data.data);
       return response.data.data;
     } catch (err) {
@@ -48,13 +49,15 @@ export const fetchSingleFan = createAsyncThunk(
 
 export const updateFan = createAsyncThunk(
   "/volunteers/fans/fan/update",
-  async ({ payload, AsyncStorage }, { rejectWithValue }) => {
+  async ({ payload, alertModal, navigation }, { rejectWithValue }) => {
     try {
+      // console.log(payload, "update fan");
       const response = await api.fanUpdate(payload);
-      console.log(response.data, "user just logged in");
+      alertModal("Hurray!", "Fan was successfully updated", () => navigation.goBack());
       return response.data;
     } catch (err) {
-      console.log(err.response.data.message, "error occured");
+      alertModal("Oops", err.response.data.message);
+      console.log(err.response.data, "error occured");
       return rejectWithValue(err.response.data);
     }
   }
@@ -63,11 +66,12 @@ export const updateFan = createAsyncThunk(
 const fanSlice = createSlice({
   name: "fan",
   initialState: {
-    fans: null,
+    fans: [],
     singleFan: null,
     error: "",
     loading: false,
     fanLoading: false,
+    updating: false,
   },
 
   reducers: {
@@ -123,15 +127,15 @@ const fanSlice = createSlice({
     },
 
     [updateFan.pending]: (state) => {
-      state.loading = true;
+      state.updating = true;
     },
     [updateFan.fulfilled]: (state, action) => {
-      state.loading = false;
+      state.updating = false;
       // AsyncStorage.setItem("user", JSON.stringify({ ...action.payload }));
       //state.fan = action.payload;
     },
     [updateFan.rejected]: (state, action) => {
-      state.loading = false;
+      state.updating = false;
       state.error = action.payload;
     },
   },

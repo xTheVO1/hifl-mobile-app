@@ -15,9 +15,10 @@ import {
 import tw from "../lib/tailwind";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../redux/features/auth.slice";
-import { fetchSingleFan, updateFan } from "../redux/features/fan.slice";
+import fanSlice, { fetchSingleFan, updateFan } from "../redux/features/fan.slice";
 import { format } from "date-fns";
 import { useFocusEffect } from "@react-navigation/native";
+import { alertModal } from "../helpers/utils";
 
 const Gender = [
   {
@@ -38,12 +39,12 @@ const FanDetail = ({ navigation, route }) => {
     LastName: "",
     Email: "",
     PhoneNumber: undefined,
-    Tickets: [{ TicketNo: "45678", TicketDate: "2022-06-08" }],
+    Tickets: [],
     NewTicket: "",
   };
   const [fan, setFan] = useState(initialState);
   const [open, setOpen] = useState(false);
-  const { fanLoading } = useSelector((state) => state.fan);
+  const { fanLoading, updating } = useSelector((state) => state.fan);
   const dispatch = useDispatch();
   const fanId = route.params.id;
 
@@ -51,15 +52,17 @@ const FanDetail = ({ navigation, route }) => {
     const date = format(new Date(), "yyyy-MM-dd");
     const ticket = fan.NewTicket ? [{ TicketNo: fan.NewTicket, TicketDate: date }] : "";
     const payload = {
-      id: fanId,
-      FirstName: fan.FirstName.trim(),
-      LastName: fan.LastName.trim(),
-      Email: fan.Email.trim(),
-      Phoneumber: fan.PhoneNumber.trim(),
-      Tickets: [...fan.Tickets, ...ticket],
+      _id: fanId,
+      params: {
+        FirstName: fan.FirstName.trim(),
+        LastName: fan.LastName.trim(),
+        Email: fan.Email.trim(),
+        Phoneumber: fan.PhoneNumber,
+        Tickets: [...fan.Tickets, ...ticket],
+      },
     };
     console.log(payload);
-    //dispatch(registerFan({ payload, AsyncStorage, alertModal, navigation }));
+    dispatch(updateFan({ payload, alertModal, navigation }));
   };
   const handleHome = () => {
     navigation.navigate("home");
@@ -153,7 +156,7 @@ const FanDetail = ({ navigation, route }) => {
 
                 {open && (
                   <TextInput
-                    style={tw`py-3 text-sm border w-full border-[#E5E5E5] focus:border-primary rounded px-4 mb-4 focus:outline-none`}
+                    style={tw`py-3 text-sm border w-full border-[#E5E5E5] focus:border-primary rounded px-4 mb-2 focus:outline-none`}
                     placeholder="Ticket Number"
                     name="ticket"
                     onChangeText={(value) => setFan({ ...fan, NewTicket: value })}
@@ -163,16 +166,22 @@ const FanDetail = ({ navigation, route }) => {
                   />
                 )}
 
-                {/* display current tickets here as a box */}
-                <TextInput
-                  style={tw`py-3 text-sm border w-full border-[#E5E5E5] focus:border-primary rounded px-4 mb-10 focus:outline-none`}
-                  placeholder="Ticket Number"
-                  name="ticket"
-                  onChangeText={(value) => setFan({ ...fan, ticket: value })}
-                  value={fan.Tickets[0].TicketNo}
-                  keyboardType="number-pad"
-                  autoComplete="off"
-                />
+                {/* users current ticket */}
+                <View style={tw`mb-6`}>
+                  {fan?.Tickets?.map(({ TicketNo }, i) => (
+                    <TextInput
+                      style={tw`py-3 text-sm text-secondary border w-full border-[#E5E5E5] focus:border-primary rounded px-4 mb-2 focus:outline-none`}
+                      placeholder="Ticket Number"
+                      name="ticket"
+                      // onChangeText={(value) => setFan({ ...fan, ticket: value })}
+                      value={TicketNo}
+                      keyboardType="number-pad"
+                      autoComplete="off"
+                      editable={false}
+                      key={i}
+                    />
+                  ))}
+                </View>
 
                 <TouchableOpacity
                   style={tw`py-4 w-full bg-primary flex flex-row justify-center rounded-md`}
@@ -180,7 +189,7 @@ const FanDetail = ({ navigation, route }) => {
                   // disabled={}
                   onPress={handleSubmit}
                 >
-                  {fanLoading ? (
+                  {updating ? (
                     <ActivityIndicator size="small" color="#fff" />
                   ) : (
                     <Text style={tw`text-[#fff] text-sm font-bold capitalize`}>Submit</Text>

@@ -67,8 +67,8 @@ const NewFan = ({ navigation }) => {
       return alertModal("Oops!", "Please all fields are required");
     }
     if (fan.firstName && fan.lastName && fan.email && fan.phoneNumber && fan.ticket) {
-      //dispatch(registerFan({ payload, AsyncStorage, alertModal, navigation }));
-      console.log(payload, "payload");
+      dispatch(registerFan({ payload, AsyncStorage, alertModal, navigation }));
+      // console.log(payload, "payload");
     }
   };
   useEffect(() => {
