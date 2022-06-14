@@ -1,9 +1,11 @@
 import { StatusBar } from "expo-status-bar";
-import { DefaultTheme, NavigationContainer } from "@react-navigation/native";
+import { DefaultTheme } from "@react-navigation/native";
 import { useDeviceContext } from "twrnc";
 import tw from "twrnc";
 import { useFonts } from "expo-font";
 import RootStack from "./app/navigators/RootStack";
+import { Provider } from "react-redux";
+import { store } from "./app/redux/store";
 
 const theme = {
   ...DefaultTheme,
@@ -12,7 +14,8 @@ const theme = {
     background: "transparent",
   },
 };
-export default function App() {
+
+const App = () => {
   useDeviceContext(tw);
 
   const [loaded] = useFonts({
@@ -24,10 +27,13 @@ export default function App() {
   });
 
   if (!loaded) return null;
+
   return (
-    <>
-      <StatusBar style="light" />
+    <Provider store={store}>
+      <StatusBar backgroundColor="#F4F4F4" />
       <RootStack />
-    </>
+    </Provider>
   );
-}
+};
+
+export default App;

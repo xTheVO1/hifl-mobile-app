@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "HiFLApp",
-    "slug": "HiFLApp",
+    "name": "HiFL App",
+    "slug": "hiflapp",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./app/assets/icon.png",

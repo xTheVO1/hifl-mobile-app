@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   ScrollView,
   View,
@@ -8,11 +8,15 @@ import {
   SafeAreaView,
   ActivityIndicator,
   TouchableOpacity,
-  StatusBar,
   Pressable,
-  SectionList,
 } from "react-native";
 import tw from "../lib/tailwind";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../redux/features/auth.slice";
+import { registerFan } from "../redux/features/fan.slice";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { alertModal } from "../helpers/utils";
+import { format } from "date-fns";
 
 const Gender = [
   {
@@ -28,42 +32,65 @@ const Item = ({ title }) => (
 );
 
 const NewFan = ({ navigation }) => {
-  const handleSubmit = () => {
-    console.log("Clicked");
-  };
-  const handleHome = () => {
-    navigation.navigate("home");
-  };
-  const handleLogout = () => {
-    navigation.navigate("login");
-  };
+  const [currentUser, setCurrentUser] = useState(null);
+
+  //console.log(currentUser, "volunteer is saved bro!!");
   const initialState = {
     firstName: "",
     lastName: "",
     email: "",
     phoneNumber: "",
-    createdBy: "",
   };
   const [fan, setFan] = useState(initialState);
-  const [loading, setLoading] = useState(false);
+  const { loading } = useSelector((state) => state.fan);
+  const dispatch = useDispatch();
+
+  const handleHome = () => {
+    navigation.navigate("home");
+  };
+  const handleLogout = () => {
+    dispatch(logout());
+  };
+  const handleSubmit = () => {
+    const date = format(new Date(), "yyyy-MM-dd");
+    const tickets = [{ TicketNo: fan.ticket, TicketDate: date }];
+    const payload = {
+      FirstName: fan.firstName.trim(),
+      LastName: fan.lastName.trim(),
+      Email: fan.email.trim(),
+      PhoneNumber: fan.phoneNumber.trim(),
+      CreatedBy: currentUser._id,
+      Tickets: tickets,
+    };
+
+    if (fan.firstName == "" || fan.lastName == "" || fan.email == "" || fan.phoneNumber == "" || fan.ticket == "") {
+      return alertModal("Oops!", "Please all fields are required");
+    }
+    if (fan.firstName && fan.lastName && fan.email && fan.phoneNumber && fan.ticket) {
+      dispatch(registerFan({ payload, AsyncStorage, alertModal, navigation }));
+      // console.log(payload, "payload");
+    }
+  };
+  useEffect(() => {
+    AsyncStorage.getItem("user").then((res) => {
+      if (res !== null) {
+        setCurrentUser(JSON.parse(res).data.User);
+      }
+    });
+  }, []);
+
   return (
     <SafeAreaView style={tw`bg-secondary h-full relative`}>
       <ScrollView style={tw`flex flex-col bg-secondary`}>
         <View style={tw`h-[200px] flex flex-col justify-end pb-5`}>
           <View style={tw`flex flex-row justify-between items-center px-6`}>
             <Pressable onPress={handleHome}>
-              <Image
-                source={require("../assets/icons/home.png")}
-                style={tw``}
-              />
+              <Image source={require("../assets/icons/home.png")} style={tw``} />
             </Pressable>
             <Text style={tw`text-[#fff] font-bold text-2xl`}>New Fan</Text>
 
             <Pressable onPress={handleLogout}>
-              <Image
-                source={require("../assets/hifl_icon.png")}
-                style={tw`w-[50px]`}
-              />
+              <Image source={require("../assets/hifl_icon.png")} style={tw`w-[50px]`} />
             </Pressable>
           </View>
         </View>
@@ -125,9 +152,7 @@ const NewFan = ({ navigation }) => {
               {loading ? (
                 <ActivityIndicator size="small" color="#fff" />
               ) : (
-                <Text style={tw`text-[#fff] text-sm font-bold capitalize`}>
-                  Submit
-                </Text>
+                <Text style={tw`text-[#fff] text-sm font-bold capitalize`}>Submit</Text>
               )}
             </TouchableOpacity>
           </View>
