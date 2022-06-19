@@ -16,6 +16,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchFans } from "../redux/features/fan.slice";
 import EmptyList from "../components/EmptyList";
+import { logout } from "../redux/features/auth.slice";
 
 const Item = ({ item }) => (
   <View style={tw`w-full p-5 my-1 flex flex-col content-center bg-[#FAFAFA]`}>
@@ -27,7 +28,7 @@ const Item = ({ item }) => (
             {item?.FirstName} {item.LastName}
           </Text>
           <Text style={tw`text-xs text-[#0013FF] font-light	uppercase`}>
-            {item.Tickets.length} {item.Tickets.lenght > 1 ? "Tickets" : "Ticket"}
+            {item.Tickets.length} {item.Tickets.length > 1 ? "Tickets" : "Ticket"}
           </Text>
         </View>
       </View>
@@ -70,6 +71,9 @@ const Home = ({ navigation }) => {
     const userId = user.User._id;
     dispatch(fetchFans({ userId, setFilteredData }));
   };
+  const handleLogout = () => {
+    dispatch(logout());
+  };
 
   useFocusEffect(
     useCallback(() => {
@@ -90,7 +94,9 @@ const Home = ({ navigation }) => {
       <View style={tw`h-[200px] flex flex-col justify-end pb-5`}>
         <View style={tw`flex flex-row justify-between items-center px-6`}>
           <Text style={tw`text-[#fff] font-bold text-2xl capitalize`}>Hi {user?.User.Firstname || "there"},</Text>
-          <Image source={require("../assets/hifl_icon.png")} style={tw`w-[50px]`} />
+          <Pressable onPress={handleLogout}>
+            <Image source={require("../assets/hifl_icon.png")} style={tw`w-[50px]`} />
+          </Pressable>
         </View>
       </View>
 
