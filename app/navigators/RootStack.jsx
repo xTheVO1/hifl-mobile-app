@@ -15,22 +15,6 @@ const RootStack = () => {
   const dispatch = useDispatch();
   const Stack = createNativeStackNavigator();
 
-  // const persistUser = () => {
-  //   AsyncStorage.getItem("user")
-  //     .then((res) => {
-  //       if (res !== null) {
-  //         console.log("logged in");
-  //         dispatch(setUser(JSON.parse(res.data)));
-  //       }
-  //     })
-  //     .catch((e) => console.log(e, "errrr"));
-  // };
-
-  //keep showing the splash icon until the app determines if the user is logged in or not
-  // if (!appReady) {
-  //   return <AppLoading startAsync={persistUser} onFinish={() => setAppReady(true)} onError={console.warn} />;
-  // }
-
   useEffect(() => {
     async function prepare() {
       try {
