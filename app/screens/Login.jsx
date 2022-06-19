@@ -8,7 +8,6 @@ import {
   SafeAreaView,
   ActivityIndicator,
   TouchableOpacity,
-  StatusBar,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import tw from "../lib/tailwind";

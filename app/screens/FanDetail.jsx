@@ -8,14 +8,12 @@ import {
   SafeAreaView,
   ActivityIndicator,
   TouchableOpacity,
-  StatusBar,
   Pressable,
-  SectionList,
 } from "react-native";
 import tw from "../lib/tailwind";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../redux/features/auth.slice";
-import fanSlice, { fetchSingleFan, updateFan } from "../redux/features/fan.slice";
+import { fetchSingleFan, updateFan } from "../redux/features/fan.slice";
 import { format } from "date-fns";
 import { useFocusEffect } from "@react-navigation/native";
 import { alertModal } from "../helpers/utils";
