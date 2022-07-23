@@ -1,7 +1,8 @@
 import axios from "axios";
-import { BASE_URL } from "@env";
+// import { BASE_URL } from "@env";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+const BASE_URL = "https://hifl-herokuapp.com/api/v1";
 const API = axios.create({ baseURL: BASE_URL });
 
 API.interceptors.request.use(
